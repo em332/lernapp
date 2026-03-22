@@ -1,0 +1,6 @@
+term,language,definition,translation,exampleSentence,notes,difficulty,tags,status
+Serendipität,Deutsch,"Glücklicher Zufallsfund; wertvolle Entdeckung, die man nicht gesucht hat",serendipity,Die Entdeckung der Röntgenstrahlen war ein klassisches Beispiel für Serendipität.,"Von engl. serendipity (H. Walpole, 1754).",hard,Fremdwort;Wissenschaft,new
+Kaizen,Japanisch,Philosophie der kontinuierlichen schrittweisen Verbesserung,continuous improvement,Das Toyota-Produktionssystem basiert auf dem Kaizen-Prinzip.,kai = Veränderung; zen = gut.,medium,Japanisch;Management;Produktivität,new
+Cognitive Load,Englisch,The total amount of mental effort being used in working memory,Kognitive Belastung des Arbeitsgedächtnisses,Good UX design reduces cognitive load.,"Sweller, 1988.",medium,Englisch;Psychologie;UX,new
+apophenia,Englisch,The tendency to perceive meaningful connections between unrelated things,Muster in zufälligen Daten erkennen,Seeing faces in clouds is harmless apophenia.,"Coined by Klaus Conrad, 1958.",hard,Englisch;Psychologie;Kognition,new
+Gestalt,Deutsch,Das Ganze ist mehr als die Summe seiner Teile,gestalt / form / shape,Das Wort Gestalt wurde international übernommen.,"Gestaltpsychologie: Wertheimer, Köhler, Koffka.",easy,Deutsch;Psychologie,new

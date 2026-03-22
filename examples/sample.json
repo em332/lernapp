@@ -1,0 +1,76 @@
+[
+  {
+    "term": "Serendipität",
+    "language": "Deutsch",
+    "meanings": [
+      {
+        "definition": "Glücklicher Zufallsfund; wertvolle Entdeckung, die man nicht gesucht hat",
+        "translation": "serendipity"
+      }
+    ],
+    "exampleSentence": "Die Entdeckung der Röntgenstrahlen war ein klassisches Beispiel für Serendipität.",
+    "notes": "Vom englischen 'serendipity', geprägt von Horace Walpole (1754) nach einem persischen Märchen.",
+    "difficulty": "hard",
+    "tags": ["Fremdwort", "Wissenschaft", "Geschichte"]
+  },
+  {
+    "term": "Kaizen",
+    "language": "Japanisch",
+    "meanings": [
+      {
+        "definition": "Philosophie der kontinuierlichen, schrittweisen Verbesserung",
+        "translation": "continuous improvement"
+      }
+    ],
+    "exampleSentence": "Das Toyota-Produktionssystem basiert auf dem Kaizen-Prinzip: täglich kleine Verbesserungen.",
+    "notes": "kai = Veränderung, zen = gut/besser. Aus der japanischen Managementphilosophie.",
+    "difficulty": "medium",
+    "tags": ["Japanisch", "Management", "Produktivität"]
+  },
+  {
+    "term": "Cognitive Load",
+    "language": "Englisch",
+    "meanings": [
+      {
+        "definition": "The total amount of mental effort being used in working memory",
+        "translation": "Kognitive Belastung des Arbeitsgedächtnisses"
+      }
+    ],
+    "exampleSentence": "Good UX design reduces cognitive load so users can focus on their goals.",
+    "notes": "Term from cognitive psychology (Sweller, 1988). Highly relevant in UX, teaching, and writing.",
+    "difficulty": "medium",
+    "tags": ["Englisch", "Psychologie", "UX"]
+  },
+  {
+    "term": "apophenia",
+    "language": "Englisch",
+    "meanings": [
+      {
+        "definition": "The tendency to perceive meaningful connections between unrelated things",
+        "translation": "Apophänie: das Erkennen von Mustern in zufälligen Daten"
+      }
+    ],
+    "exampleSentence": "Seeing faces in clouds is a harmless example of apophenia.",
+    "notes": "Coined by Klaus Conrad (1958). Related to pareidolia (faces specifically).",
+    "difficulty": "hard",
+    "tags": ["Englisch", "Psychologie", "Kognition"]
+  },
+  {
+    "term": "Gestalt",
+    "language": "Deutsch",
+    "meanings": [
+      {
+        "definition": "Das Ganze ist mehr als die Summe seiner Teile; eine wahrgenommene Einheit",
+        "translation": "gestalt / form / shape"
+      },
+      {
+        "definition": "In der Psychologie: ganzheitliche Wahrnehmungsstruktur",
+        "translation": ""
+      }
+    ],
+    "exampleSentence": "Das Wort 'Gestalt' wurde international in die Psychologie übernommen.",
+    "notes": "Gestaltpsychologie: Max Wertheimer, Wolfgang Köhler, Kurt Koffka (1910er).",
+    "difficulty": "easy",
+    "tags": ["Deutsch", "Psychologie", "Philosophie"]
+  }
+]

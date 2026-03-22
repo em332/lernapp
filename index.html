@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LernApp</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div id="app">
+    <nav id="main-nav">
+      <div class="nav-brand">
+        <span class="nav-logo">◈</span>
+        <span class="nav-title">LernApp</span>
+      </div>
+      <div class="nav-links">
+        <a href="#library"  class="nav-link" data-view="library">Bibliothek</a>
+        <a href="#learn"    class="nav-link" data-view="learn">Lernen</a>
+        <a href="#stats"    class="nav-link" data-view="stats">Statistik</a>
+        <a href="#settings" class="nav-link" data-view="settings">Einstellungen</a>
+        <a href="#io"       class="nav-link" data-view="io">Import / Export</a>
+        <a href="#help"     class="nav-link" data-view="help">Hilfe</a>
+      </div>
+      <div class="nav-actions">
+        <button id="btn-add-entry" class="btn btn-primary btn-sm">+ Neu</button>
+      </div>
+    </nav>
+
+    <!-- Modal overlay for entry editor -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+      <div id="modal-content" class="modal-content"></div>
+    </div>
+
+    <main id="view-container"></main>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

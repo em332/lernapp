@@ -5,7 +5,7 @@
 
 import { addEntry, updateEntry, getEntry, loadEntries } from '../data/store.js';
 import { createEntry, validateEntry, DIFFICULTY } from '../data/model.js';
-import { qs } from '../utils/dom.js';
+import { qs, esc } from '../utils/dom.js';
 
 const overlay = () => qs('#modal-overlay');
 const modalEl = () => qs('#modal-content');
@@ -247,6 +247,3 @@ function saveEntry(data, isNew, onSave) {
   onSave();
 }
 
-function esc(s) {
-  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}

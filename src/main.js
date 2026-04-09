@@ -4,7 +4,7 @@
  * Routen: #library (default) | #learn | #stats | #settings | #io
  */
 
-import { requireAuth }           from './auth.js';
+import { requireAuth, logout, currentUsername } from './auth.js';
 import { loadEntries, addEntry } from './data/store.js';
 import { createEntry }           from './data/model.js';
 import { EXAMPLE_ENTRIES }       from './data/examples.js';
@@ -24,6 +24,9 @@ function init() {
     EXAMPLE_ENTRIES.forEach(e => addEntry(e));
   }
 
+  const navUser = document.getElementById('nav-username');
+  if (navUser) navUser.textContent = currentUsername();
+
   setupNav();
   route();
 
@@ -31,6 +34,9 @@ function init() {
   document.getElementById('btn-add-entry')?.addEventListener('click', () => {
     openEditor(null, () => route());
   });
+
+  // Logout-Button in der Navbar
+  document.getElementById('btn-logout')?.addEventListener('click', logout);
 }
 
 // ── Router ────────────────────────────────────────────────────────────────────

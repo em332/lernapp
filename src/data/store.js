@@ -6,15 +6,21 @@
 
 import { createEntry } from './model.js';
 
-const ENTRIES_KEY  = 'lernapp_entries';
-const SETTINGS_KEY = 'lernapp_settings';
+const SESSION_USER_KEY = 'lernapp_user';
+
+function userPrefix() {
+  return sessionStorage.getItem(SESSION_USER_KEY) ?? 'default';
+}
+
+const entriesKey  = () => `lernapp_entries_${userPrefix()}`;
+const settingsKey = () => `lernapp_settings_${userPrefix()}`;
 
 // ── Einträge ────────────────────────────────────────────────────────────────
 
 /** Alle Einträge laden */
 export function loadEntries() {
   try {
-    const raw = localStorage.getItem(ENTRIES_KEY);
+    const raw = localStorage.getItem(entriesKey());
     if (!raw) return [];
     return JSON.parse(raw);
   } catch {
@@ -24,7 +30,7 @@ export function loadEntries() {
 
 /** Alle Einträge speichern (kompletter Überschreib) */
 export function saveEntries(entries) {
-  localStorage.setItem(ENTRIES_KEY, JSON.stringify(entries));
+  localStorage.setItem(entriesKey(), JSON.stringify(entries));
 }
 
 /** Einzelnen Eintrag hinzufügen */
@@ -86,7 +92,7 @@ export const DEFAULT_SETTINGS = {
 
 export function loadSettings() {
   try {
-    const raw = localStorage.getItem(SETTINGS_KEY);
+    const raw = localStorage.getItem(settingsKey());
     return raw ? { ...DEFAULT_SETTINGS, ...JSON.parse(raw) } : { ...DEFAULT_SETTINGS };
   } catch {
     return { ...DEFAULT_SETTINGS };
@@ -94,5 +100,5 @@ export function loadSettings() {
 }
 
 export function saveSettings(settings) {
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  localStorage.setItem(settingsKey(), JSON.stringify(settings));
 }

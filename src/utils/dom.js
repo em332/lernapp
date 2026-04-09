@@ -34,6 +34,11 @@ export function relativeDue(dateStr) {
   return `in ${diff} Tagen`;
 }
 
+/** HTML-Zeichen maskieren */
+export function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 /** Text normalisieren für Antwortvergleich */
 export function normalizeAnswer(str) {
   return str.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.,;:!?'"]/g, '');
@@ -46,20 +51,20 @@ export function similarity(a, b) {
   if (a === b) return 1;
   const maxLen = Math.max(a.length, b.length);
   if (maxLen === 0) return 1;
-  const dist = levenshtein(a, b);
-  return 1 - dist / maxLen;
+  return 1 - levenshtein(a, b) / maxLen;
 }
 
 function levenshtein(a, b) {
-  const dp = Array.from({ length: a.length + 1 }, (_, i) =>
-    Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
-  );
+  if (a.length < b.length) [a, b] = [b, a];
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
   for (let i = 1; i <= a.length; i++) {
+    const curr = [i];
     for (let j = 1; j <= b.length; j++) {
-      dp[i][j] = a[i - 1] === b[j - 1]
-        ? dp[i - 1][j - 1]
-        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+      curr[j] = a[i - 1] === b[j - 1]
+        ? prev[j - 1]
+        : 1 + Math.min(prev[j], curr[j - 1], prev[j - 1]);
     }
+    prev = curr;
   }
-  return dp[a.length][b.length];
+  return prev[b.length];
 }

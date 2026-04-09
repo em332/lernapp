@@ -5,7 +5,7 @@
 import { loadEntries, importEntries, saveEntries } from '../data/store.js';
 import { createEntry, validateEntry }               from '../data/model.js';
 import { toCSV, fromCSV }                           from '../utils/csv.js';
-import { qs }                                       from '../utils/dom.js';
+import { qs, esc }                                  from '../utils/dom.js';
 
 export function render(container) {
   container.innerHTML = `
@@ -212,10 +212,5 @@ function jsonExampleEsc() {
       tags: ['Fremdwort', 'Philosophie']
     }
   ];
-  return JSON.stringify(example, null, 2)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function esc(s) {
-  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return esc(JSON.stringify(example, null, 2));
 }

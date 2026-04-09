@@ -3,8 +3,8 @@
  */
 
 import { loadEntries, deleteEntry } from '../data/store.js';
-import { isDue } from '../data/model.js';
-import { qs, fmtDate, relativeDue } from '../utils/dom.js';
+import { isDue, STATUS } from '../data/model.js';
+import { qs, esc, fmtDate, relativeDue } from '../utils/dom.js';
 import { openEditor } from './editor.js';
 
 export function render(container) {
@@ -109,8 +109,8 @@ function entryCardHTML(e) {
 
 function statsBar(entries) {
   const due      = entries.filter(isDue).length;
-  const mastered = entries.filter(e => e.status === 'mastered').length;
-  const learning = entries.filter(e => e.status === 'learning').length;
+  const mastered = entries.filter(e => e.status === STATUS.MASTERED).length;
+  const learning = entries.filter(e => e.status === STATUS.LEARNING).length;
   return `
     <div class="stat-pill"><strong>${due}</strong> fällig</div>
     <div class="stat-pill"><strong>${learning}</strong> lernend</div>
@@ -163,6 +163,3 @@ function statusLabel(s) {
   return { new: 'Neu', learning: 'Lernend', review: 'Wiederholung', mastered: 'Beherrscht' }[s] ?? s;
 }
 
-function esc(s) {
-  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}

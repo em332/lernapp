@@ -13,8 +13,8 @@
 
 import { loadEntries, updateEntry, deleteEntry, loadSettings } from '../data/store.js';
 import { isDue, STATUS }                          from '../data/model.js';
-import { schedule, RATING, RATING_LABELS, RATING_COLORS } from '../srs/algorithm.js';
-import { qs, similarity }                         from '../utils/dom.js';
+import { schedule, previewInterval, RATING, RATING_LABELS, RATING_COLORS } from '../srs/algorithm.js';
+import { qs, esc, similarity }                    from '../utils/dom.js';
 
 export function render(container) {
   renderSetup(container);
@@ -254,10 +254,7 @@ function ratingButtonsHTML(entry) {
 }
 
 function previewDays(entry, rating) {
-  const { schedule: sched } = (() => {
-    try { return { schedule: schedule(entry, rating) }; } catch { return { schedule: { interval: 1 } }; }
-  })();
-  const days = sched.interval;
+  const days = previewInterval(entry, rating);
   if (days <= 0) return 'jetzt';
   if (days === 1) return '1 Tag';
   return `${days} Tage`;
@@ -432,6 +429,3 @@ function renderSummary(container, session) {
   qs('#btn-restart', container)?.addEventListener('click', () => render(container));
 }
 
-function esc(s) {
-  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}

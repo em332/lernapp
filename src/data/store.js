@@ -1,104 +1,121 @@
 /**
- * Datenpersistenz via localStorage.
- * Alle Lerneinträge liegen unter ENTRIES_KEY als JSON-Array.
- * Einstellungen liegen separat unter SETTINGS_KEY.
+ * Datenpersistenz via Supabase.
+ *
+ * Strategie: In-Memory-Cache für synchrone Lesezugriffe.
+ * initStore() lädt einmalig nach dem Login alle Daten vom Server.
+ * Schreiboperationen aktualisieren den Cache sofort und persistieren
+ * asynchron im Hintergrund (fire-and-forget mit Fehlerlogging).
  */
 
 import { createEntry } from './model.js';
+import { supabase }    from './supabase.js';
 
 const SESSION_USER_KEY = 'lernapp_user';
 
-function userPrefix() {
+function currentUser() {
   return sessionStorage.getItem(SESSION_USER_KEY) ?? 'default';
 }
 
-const entriesKey  = () => `lernapp_entries_${userPrefix()}`;
-const settingsKey = () => `lernapp_settings_${userPrefix()}`;
+// ── In-Memory-Cache ──────────────────────────────────────────────────────────
+
+let _entries  = null;
+let _settings = null;
+
+/**
+ * Einmalig nach dem Login aufrufen.
+ * Lädt alle Daten des aktuellen Users von Supabase in den Cache.
+ */
+export async function initStore() {
+  const username = currentUser();
+
+  const [{ data: entryRow }, { data: settingsRow }] = await Promise.all([
+    supabase.from('entries').select('data').eq('username', username).maybeSingle(),
+    supabase.from('settings').select('data').eq('username', username).maybeSingle(),
+  ]);
+
+  _entries  = entryRow?.data  ?? [];
+  _settings = settingsRow?.data ?? null;
+}
+
+// ── Hintergrund-Persistenz ───────────────────────────────────────────────────
+
+async function persistEntries(entries) {
+  const { error } = await supabase
+    .from('entries')
+    .upsert({ username: currentUser(), data: entries });
+  if (error) console.error('Supabase entries save error:', error);
+}
+
+async function persistSettings(settings) {
+  const { error } = await supabase
+    .from('settings')
+    .upsert({ username: currentUser(), data: settings });
+  if (error) console.error('Supabase settings save error:', error);
+}
 
 // ── Einträge ────────────────────────────────────────────────────────────────
 
-/** Alle Einträge laden */
 export function loadEntries() {
-  try {
-    const raw = localStorage.getItem(entriesKey());
-    if (!raw) return [];
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
+  return _entries ?? [];
 }
 
-/** Alle Einträge speichern (kompletter Überschreib) */
 export function saveEntries(entries) {
-  localStorage.setItem(entriesKey(), JSON.stringify(entries));
+  _entries = entries;
+  persistEntries(entries);
 }
 
-/** Einzelnen Eintrag hinzufügen */
 export function addEntry(data) {
-  const entries = loadEntries();
   const entry   = createEntry(data);
-  entries.push(entry);
+  const entries = [...loadEntries(), entry];
   saveEntries(entries);
   return entry;
 }
 
-/** Eintrag aktualisieren (per id) */
 export function updateEntry(id, changes) {
   const entries = loadEntries();
   const idx     = entries.findIndex(e => e.id === id);
   if (idx === -1) return null;
   entries[idx] = { ...entries[idx], ...changes, updatedAt: new Date().toISOString() };
-  saveEntries(entries);
+  saveEntries([...entries]);
   return entries[idx];
 }
 
-/** Eintrag löschen */
 export function deleteEntry(id) {
-  const entries = loadEntries().filter(e => e.id !== id);
-  saveEntries(entries);
+  saveEntries(loadEntries().filter(e => e.id !== id));
 }
 
-/** Eintrag per id suchen */
 export function getEntry(id) {
   return loadEntries().find(e => e.id === id) ?? null;
 }
 
-/** Mehrere Einträge auf einmal importieren (überschreibt bestehende per id) */
 export function importEntries(newEntries, mode = 'merge') {
   if (mode === 'replace') {
     saveEntries(newEntries);
     return;
   }
-  // merge: bestehende id überschreiben, neue hinzufügen
   const existing = loadEntries();
-  const map       = new Map(existing.map(e => [e.id, e]));
-  for (const e of newEntries) {
-    map.set(e.id, e);
-  }
+  const map      = new Map(existing.map(e => [e.id, e]));
+  for (const e of newEntries) map.set(e.id, e);
   saveEntries([...map.values()]);
 }
 
 // ── Einstellungen ────────────────────────────────────────────────────────────
 
 export const DEFAULT_SETTINGS = {
-  newCardsPerDay:      20,
-  reviewsPerSession:   50,
-  easyBonus:           1.3,   // Intervall-Multiplikator bei "Leicht"
-  intervalModifier:    1.0,   // Globaler Multiplikator (z. B. 0.8 = kürzere Intervalle)
-  maxIntervalDays:     365,
-  learnMode:           'flashcard', // 'flashcard' | 'write'
-  showExampleOnFront:  false,
+  newCardsPerDay:     20,
+  reviewsPerSession:  50,
+  easyBonus:          1.3,
+  intervalModifier:   1.0,
+  maxIntervalDays:    365,
+  learnMode:          'flashcard',
+  showExampleOnFront: false,
 };
 
 export function loadSettings() {
-  try {
-    const raw = localStorage.getItem(settingsKey());
-    return raw ? { ...DEFAULT_SETTINGS, ...JSON.parse(raw) } : { ...DEFAULT_SETTINGS };
-  } catch {
-    return { ...DEFAULT_SETTINGS };
-  }
+  return _settings ? { ...DEFAULT_SETTINGS, ..._settings } : { ...DEFAULT_SETTINGS };
 }
 
 export function saveSettings(settings) {
-  localStorage.setItem(settingsKey(), JSON.stringify(settings));
+  _settings = settings;
+  persistSettings(settings);
 }

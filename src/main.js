@@ -5,7 +5,7 @@
  */
 
 import { requireAuth, logout, currentUsername } from './auth.js';
-import { loadEntries, addEntry } from './data/store.js';
+import { initStore, loadEntries, addEntry } from './data/store.js';
 import { createEntry }           from './data/model.js';
 import { EXAMPLE_ENTRIES }       from './data/examples.js';
 import { openEditor }            from './views/editor.js';
@@ -18,7 +18,9 @@ import { render as renderHelp     } from './views/help.js';
 
 // ── Initialisierung ───────────────────────────────────────────────────────────
 
-function init() {
+async function init() {
+  await initStore();
+
   // Beispieldaten laden, wenn keine Einträge vorhanden
   if (loadEntries().length === 0) {
     EXAMPLE_ENTRIES.forEach(e => addEntry(e));
